@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Trip Room</string>
+    <string name="login">Login</string>
+    <string name="please">Please sign in to continue</string>
+</resources>
