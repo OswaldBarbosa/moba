@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.modifier.modifierLocalOf
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -94,8 +95,15 @@ fun TripRoomScreen() {
                             .fillMaxWidth()
                             .padding(end = 16.dp),
                         shape = RoundedCornerShape(16.dp),
-                        leadingIcon = Icon.
+                        leadingIcon = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.baseline_email_24),
+                                contentDescription = null,
+                                tint = Color(207, 6, 240)
+                            )
+                        }
                     )
+
 
                     Spacer(modifier = Modifier.height(32.dp))
 
@@ -106,7 +114,15 @@ fun TripRoomScreen() {
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(end = 16.dp),
-                        shape = RoundedCornerShape(16.dp)
+                        shape = RoundedCornerShape(16.dp),
+                        leadingIcon = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.baseline_email_24),
+                                contentDescription = null,
+                                tint = Color(207, 6, 240)
+                            )
+                        }
+                    )
                     )
 
                 }
