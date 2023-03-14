@@ -1,5 +1,18 @@
 <resources>
-    <string name="app_name">Trip Room</string>
+    <string name="title_activity_sign_up">Sing Up</string>
+    <string name="app_name">Travel</string>
     <string name="login">Login</string>
-    <string name="please">Please sign in to continue</string>
+    <string name="please_signin">Please sign in to continue</string>
+    <string name="email">E-mail</string>
+    <string name="password">Password</string>
+    <string name="signin">Sign in</string>
+    <string name="dont_account">Don\'t have an account</string>
+    <string name="signup">Sign up</string>
+    <string name="create_new_account">Create a new account</string>
+    <string name="username">Username</string>
+    <string name="phone">Phone</string>
+    <string name="create_account">Create Account</string>
+    <string name="already_have_Account">Already have an account?</string>
+    <string name="over_18">Over 18?</string>
+    <string name="title_activity_home">HomeActivity</string>
 </resources>
