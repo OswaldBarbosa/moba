@@ -78,6 +78,9 @@ fun SingUpScreen() {
                 fontSize = 14.sp,
                 color = Color(160, 156, 156)
             )
+
+            Spacer(modifier = Modifier.height(26.dp))
+
             Box() {
                 Card(
                     modifier = Modifier
@@ -95,19 +98,18 @@ fun SingUpScreen() {
                     ),
                     backgroundColor = Color(246, 246, 246)
                 ) {
-                    Image(
-                        modifier = Modifier
-                            .padding(16.dp),
-                        painter = painterResource(id = R.drawable.profile),
-                        contentDescription = ""
+                    Icon(
+                        painter = painterResource(id = R.drawable.person_outline_24),
+                        contentDescription = "User",
+                        tint = Color(207,6,240)
                     )
                 }
-                Image(
-                    modifier= Modifier
-                        .size(28.dp)
+                Icon(
+                    modifier = Modifier
                         .align(alignment = Alignment.BottomEnd),
-                    painter = painterResource(id = R.drawable.camera),
-                    contentDescription = ""
+                    painter = painterResource(id = R.drawable.camera_alt_24),
+                    contentDescription = "",
+                    tint = Color(207,6,240)
                 )
             }
         }
