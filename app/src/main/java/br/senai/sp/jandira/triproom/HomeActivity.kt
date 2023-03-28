@@ -38,7 +38,7 @@ class HomeActivity : ComponentActivity() {
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun HomeScreen () {
+fun HomeScreen() {
 
     Column(
         modifier = Modifier
@@ -82,12 +82,12 @@ fun HomeScreen () {
                     color = Color.White
                 )
             }
-            
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
             ) {
-                
+
             }
         }
     }

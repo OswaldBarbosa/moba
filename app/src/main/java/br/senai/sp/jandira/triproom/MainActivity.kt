@@ -19,6 +19,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import br.senai.sp.jandira.triproom.components.BottomShape
+import br.senai.sp.jandira.triproom.components.TopShape
 import br.senai.sp.jandira.triproom.ui.theme.TripRoomTheme
 
 class MainActivity : ComponentActivity() {
@@ -57,13 +59,7 @@ fun TripRoomScreen() {
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
                 ) {
-                    Surface(
-                        modifier = Modifier
-                            .width(120.dp)
-                            .height(40.dp),
-                        color = Color(207, 6, 240),
-                        shape = RoundedCornerShape(bottomStart = 16.dp)
-                    ) {}
+                    TopShape()
                 }
 
                 Spacer(modifier = Modifier.height(164.dp))
@@ -134,6 +130,7 @@ fun TripRoomScreen() {
                     ) {
                         Button(
                             modifier = Modifier
+                                .width(134.dp)
                                 .height(48.dp),
                             onClick = { /*TODO*/ },
                             colors = ButtonDefaults.buttonColors(Color(207, 6, 240)),
@@ -143,7 +140,9 @@ fun TripRoomScreen() {
                             Row() {
                                 Text(
                                     text = stringResource(id = R.string.signin).uppercase(),
-                                    color = Color.White
+                                    color = Color.White,
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Bold,
                                 )
                                 Icon(
                                     painter = painterResource(id = R.drawable.arrow_forward_24),
@@ -185,13 +184,7 @@ fun TripRoomScreen() {
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.Start
                 ) {
-                    Surface(
-                        modifier = Modifier
-                            .width(120.dp)
-                            .height(40.dp),
-                        color = Color(207, 6, 240),
-                        shape = RoundedCornerShape(topEnd = 16.dp)
-                    ) {}
+                    BottomShape()
 
                 }
             }
