@@ -1,11 +1,14 @@
 package br.senai.sp.jandira.triproom
 
 import android.content.Context
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.rememberScrollableState
 import androidx.compose.foundation.gestures.scrollable
@@ -22,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -37,6 +41,8 @@ import br.senai.sp.jandira.triproom.components.TopShape
 import br.senai.sp.jandira.triproom.model.User
 import br.senai.sp.jandira.triproom.repository.UserRepository
 import br.senai.sp.jandira.triproom.ui.theme.TripRoomTheme
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 
 class SignUpActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,6 +80,24 @@ fun SingUpScreen() {
     var over18State by rememberSaveable() {
         mutableStateOf(false)
     }
+
+    //obter foto da galeria de imagens
+
+    var photoUri by remember {
+        mutableStateOf<Uri?>(null)
+    }
+
+    //criar o objeto que abrirá a galeria e retornará
+    //a uri da imagem selecionada
+    var laucher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) {
+        photoUri = it
+    }
+
+    var painter = rememberAsyncImagePainter(
+        ImageRequest.Builder(LocalContext.current).data(photoUri).build()
+    )
 
     var context = LocalContext.current
 
@@ -134,15 +158,19 @@ fun SingUpScreen() {
                         ),
                         backgroundColor = Color(246, 246, 246)
                     ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.person_outline_24),
+                        Image(
+                            painter = painter,
                             contentDescription = "User",
-                            tint = Color(207, 6, 240)
+                            modifier = Modifier.size(16.dp),
+                            contentScale = ContentScale.Crop
                         )
                     }
                     Icon(
                         modifier = Modifier
-                            .align(alignment = Alignment.BottomEnd),
+                            .align(alignment = Alignment.BottomEnd)
+                            .clickable {
+                                laucher.launch("image/*")
+                            },
                         painter = painterResource(id = R.drawable.camera_alt_24),
                         contentDescription = "",
                         tint = Color(207, 6, 240)

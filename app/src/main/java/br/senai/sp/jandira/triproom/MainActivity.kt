@@ -1,5 +1,7 @@
 package br.senai.sp.jandira.triproom
 
+import android.content.Context
+import android.content.Intent
 import android.graphics.drawable.Icon
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -7,20 +9,30 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Password
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.modifier.modifierLocalOf
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.senai.sp.jandira.triproom.components.BottomShape
 import br.senai.sp.jandira.triproom.components.TopShape
+import br.senai.sp.jandira.triproom.repository.UserRepository
 import br.senai.sp.jandira.triproom.ui.theme.TripRoomTheme
 
 class MainActivity : ComponentActivity() {
@@ -28,7 +40,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             TripRoomTheme {
-                TripRoomScreen()
+                LoginScreen()
             }
         }
     }
@@ -36,7 +48,21 @@ class MainActivity : ComponentActivity() {
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun TripRoomScreen() {
+fun LoginScreen() {
+
+    val context = LocalContext.current
+
+    var emailState by remember {
+        mutableStateOf("")
+
+    }
+
+    var passwordState by remember {
+        mutableStateOf("")
+    }
+    var passwordVisibilityState by remember {
+        mutableStateOf(false)
+    }
 
     Surface(
         modifier = Modifier
@@ -85,9 +111,11 @@ fun TripRoomScreen() {
                     Spacer(modifier = Modifier.height(100.dp))
 
                     OutlinedTextField(
-                        value = "",
+                        value = emailState,
+                        onValueChange = {
+                            emailState = it
+                        },
                         label = { Text(text = stringResource(id = R.string.email)) },
-                        onValueChange = {},
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(end = 16.dp),
@@ -104,19 +132,37 @@ fun TripRoomScreen() {
                     Spacer(modifier = Modifier.height(32.dp))
 
                     OutlinedTextField(
-                        value = " ",
+                        value = passwordState,
+                        onValueChange = {
+                            passwordState = it
+                        },
                         label = { Text(text = "Password") },
-                        onValueChange = {},
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(end = 16.dp),
                         shape = RoundedCornerShape(16.dp),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
+                        visualTransformation = if (!passwordVisibilityState) PasswordVisualTransformation() else VisualTransformation.None,
                         leadingIcon = {
                             Icon(
                                 painter = painterResource(id = R.drawable.lock_24),
                                 contentDescription = "",
                                 tint = Color(207, 6, 240)
                             )
+                        },
+                        trailingIcon = {
+                            IconButton(onClick = {
+                                passwordVisibilityState = !passwordVisibilityState
+                            }
+                            ) {
+                                Icon(
+                                    imageVector = if (!passwordVisibilityState)
+                                        Icons.Default.Visibility
+                                    else
+                                        Icons.Default.VisibilityOff,
+                                    contentDescription = null
+                                )
+                            }
                         }
                     )
 
@@ -132,7 +178,9 @@ fun TripRoomScreen() {
                             modifier = Modifier
                                 .width(134.dp)
                                 .height(48.dp),
-                            onClick = { /*TODO*/ },
+                            onClick = {
+                                authenticate(emailState, passwordState, context)
+                            },
                             colors = ButtonDefaults.buttonColors(Color(207, 6, 240)),
                             shape = RoundedCornerShape(16.dp)
                         )
@@ -142,7 +190,7 @@ fun TripRoomScreen() {
                                     text = stringResource(id = R.string.signin).uppercase(),
                                     color = Color.White,
                                     fontSize = 16.sp,
-                                    fontWeight = FontWeight.Bold,
+                                    fontWeight = FontWeight.Bold
                                 )
                                 Icon(
                                     painter = painterResource(id = R.drawable.arrow_forward_24),
@@ -159,7 +207,8 @@ fun TripRoomScreen() {
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(end = 16.dp),
-                        horizontalArrangement = Arrangement.End
+                        horizontalArrangement = Arrangement.End,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
                             text = stringResource(id = R.string.dont_account),
@@ -169,15 +218,22 @@ fun TripRoomScreen() {
 
                         Spacer(modifier = Modifier.width(4.dp))
 
-                        Text(
-                            text = stringResource(id = R.string.signup),
-                            fontSize = 12.sp,
-                            color = Color(207, 6, 2540)
-                        )
+                        TextButton(
+                            onClick = {
+                                var openSignup = Intent(context, SignUpActivity::class.java)
+                                context.startActivity(openSignup)
+                            }
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.signup),
+                                fontSize = 12.sp,
+                                color = Color(207, 6, 2540)
+                            )
+                        }
                     }
                 }
 
-                Spacer(modifier = Modifier.height(26.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
                 Row(
                     modifier = Modifier
@@ -190,4 +246,22 @@ fun TripRoomScreen() {
             }
         }
     }
+}
+
+fun authenticate(
+    email: String,
+    password: String,
+    context: Context
+) {
+    val userRepository = UserRepository(context)
+    val user = userRepository.authenticate(
+        email,
+        password
+    )
+
+    if (user != null) {
+        val openHomeActivity = Intent(context, HomeActivity::class.java)
+        context.startActivity(openHomeActivity)
+    }
+
 }
